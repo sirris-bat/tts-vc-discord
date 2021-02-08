@@ -1,0 +1,5 @@
+appName: TtsBot
+logLevel: WARN
+
+Bot:
+    Token:
