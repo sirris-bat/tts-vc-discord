@@ -1,5 +1,8 @@
 appName: TtsBot
-logLevel: WARN
+
+Logging:
+    logLevel: INFO
+    logFile: discord.log
 
 Bot:
     Token:

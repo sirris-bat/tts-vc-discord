@@ -4,6 +4,9 @@ class _DefaultConfig:
     configName = 'TtsBot'
 
     token = None
+    
+    logLevel = "INFO"
+    logFile = None
 
 class Config(_DefaultConfig):
     def __init__(self):
@@ -12,4 +15,6 @@ class Config(_DefaultConfig):
         config.set_file('config.yaml')
 
         self.token = config['Bot']['Token'].get(str)
-        print('***' + self.token)
+        
+        self.logLevel = config['Logging']['logLevel'].get(str)
+        self.logFile = config['Logging']['logFile'].get(str)
