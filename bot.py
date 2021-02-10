@@ -2,7 +2,11 @@
 import discord
 import logging
 
+import asyncio
+import websockets
+
 from config import Config
+from api import Api
 
 config = Config()
 
@@ -20,4 +24,8 @@ if config.logFile is not None:
 async def on_ready():
     logging.info('Logged in as {0.user}'.format(client))
 
+api = Api()
+startApi = websockets.serve(api.handler, 'localhost', 4000)
+asyncio.get_event_loop().run_until_complete(startApi)
+asyncio.get_event_loop().run_forever()
 client.run(config.token)
