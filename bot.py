@@ -11,7 +11,6 @@ from api import Api
 config = Config()
 
 intents = discord.Intents.none()
-client = discord.Client()
 
 logger = logging.getLogger('discord')
 logger.setLevel(config.logLevel)
@@ -20,12 +19,24 @@ if config.logFile is not None:
     handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
     logger.addHandler(handler)
 
-@client.event
-async def on_ready():
-    logging.info('Logged in as {0.user}'.format(client))
+class TtsBot(discord.Client):
+    async def on_ready():
+        logging.info('Logged in as {0.user}'.format(client))
+
+    async def on_message():
+        # TODO: check config to see if this is enabled
+        # Safety: Don't reply to self
+        if message.author.id == self.user.id:
+            return
+
+        if message.content.startswith('!connect'):
+            # Connect to author's current voice channel
+            return
+
+        if message.content.startswith("!say"):
+            # Speak in voice channel
+            return
 
 api = Api()
-startApi = websockets.serve(api.handler, 'localhost', 4000)
-asyncio.get_event_loop().run_until_complete(startApi)
-asyncio.get_event_loop().run_forever()
-client.run(config.token)
+ttsBot = TtsBot()
+ttsBot.run(config.token)
