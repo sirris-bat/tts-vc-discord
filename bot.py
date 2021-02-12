@@ -3,9 +3,8 @@ import discord
 import logging
 
 import asyncio
-import websockets
 
-import time
+from discord.ext import commands
 
 from config import Config
 from api import Api
@@ -21,7 +20,7 @@ if config.logFile is not None:
     handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
     logger.addHandler(handler)
 
-class TtsBot(discord.Client):
+class TtsBot(commands.Bot):
     _voiceClient = None
 
     async def connect_to_vc(self, channelId):
@@ -30,21 +29,23 @@ class TtsBot(discord.Client):
     async def on_ready(self):
         logging.info('Logged in as {0.user}'.format(self))
 
-    async def on_message(self, message):
-        # TODO: check config to see if this is enabled
-        # Safety: Don't reply to self
-        if message.author.id == self.user.id:
-            return
+class BotCommands(commands.Cog):
+    def __init__(self, ttsBot):
+        self.ttsBot = ttsBot
 
-        if message.content.startswith('!connect'):
-            # Connect to author's current voice channel
-            if message.author.voice.channel is not None:
-                await self.connect_to_vc(message.author.voice.channel.id)
+    @commands.command()
+    async def join(self, ctx):
+        if ctx.message.author.voice.channel is not None:
+            await ttsBot.connect_to_vc(ctx.message.author.voice.channel.id)
 
-        if message.content.startswith("!say"):
-            # Speak in voice channel
-            return
+    @commands.command()
+    async def say(self, ctx):
+        # Call Bot's tts function
+        return
 
 api = Api()
-ttsBot = TtsBot()
+ttsBot = TtsBot(command_prefix=commands.when_mentioned_or('!'),
+                description='An obnoxious and unavoidable TTS bot')
+ttsBot.add_cog(BotCommands(ttsBot))
 ttsBot.run(config.token)
+
