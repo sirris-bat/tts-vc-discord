@@ -39,6 +39,10 @@ class BotCommands(commands.Cog):
             await ttsBot.connect_to_vc(ctx.message.author.voice.channel.id)
 
     @commands.command()
+    async def leave(self, ctx):
+        await ttsBot.disconnect()
+
+    @commands.command()
     async def say(self, ctx):
         # Call Bot's tts function
         return
