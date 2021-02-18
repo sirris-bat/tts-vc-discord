@@ -1,16 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+
 <title>TTS Discord Bot</title>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
 <link rel="stylesheet" href="./style.css">
+<script type="text/javascript" src="js/websockets.js"></script>
+
+</head>
 <body>
 
 <header>
     <h1><b>TTS Discord Bot</b></h1>
 </header>
 
-<form id="connect">
+<form id="connectForm">
     <label>Connect to Voice Channel</label>
     <input id="myChanneId" name="channelId">
     <input type="submit" value="Connect">
@@ -18,7 +25,7 @@
 
 <br>
 
-<form id="connect">
+<form id="sayForm">
     <label>Say a Phrase</label>
     <input id="myPhrase" name="phrase">
     <input type="submit" value="Say">
