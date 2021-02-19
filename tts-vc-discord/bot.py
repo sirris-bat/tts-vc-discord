@@ -8,6 +8,7 @@ from discord.ext import commands
 
 from config import Config
 from api import Api
+import webserver
 
 config = Config()
 
@@ -47,9 +48,10 @@ class BotCommands(commands.Cog):
         # Call Bot's tts function
         return
 
-api = Api()
-ttsBot = TtsBot(command_prefix=commands.when_mentioned_or('!'),
-                description='An obnoxious and unavoidable TTS bot')
-ttsBot.add_cog(BotCommands(ttsBot))
-ttsBot.run(config.token)
-
+if __name__ == "__main__":
+    api = Api()
+    # asyncio.get_event_loop().run_until_complete(webserver.start_server())
+    ttsBot = TtsBot(command_prefix=commands.when_mentioned_or('!'),
+                    description='An obnoxious and unavoidable TTS bot')
+    ttsBot.add_cog(BotCommands(ttsBot))
+    ttsBot.run(config.token)
