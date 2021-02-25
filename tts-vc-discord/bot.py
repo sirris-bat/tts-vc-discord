@@ -3,12 +3,15 @@ import discord
 import logging
 
 import asyncio
+import threading
 
 from discord.ext import commands
 
 from config import Config
 from api import Api
 import webserver
+
+import time
 
 config = Config()
 
@@ -49,9 +52,11 @@ class BotCommands(commands.Cog):
         return
 
 if __name__ == "__main__":
-    api = Api()
-    # asyncio.get_event_loop().run_until_complete(webserver.start_server())
+    threading.Thread(target=webserver.start_server).start()
     ttsBot = TtsBot(command_prefix=commands.when_mentioned_or('!'),
                     description='An obnoxious and unavoidable TTS bot')
     ttsBot.add_cog(BotCommands(ttsBot))
     ttsBot.run(config.token)
+    time.sleep(10)
+    api = Api()
+    print('##### Application startup complete #####')

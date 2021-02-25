@@ -1,5 +1,5 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
-import time
+import socket
 import os
 from mimetypes import types_map
 
@@ -8,7 +8,7 @@ port = 4000
 
 webdir = "../web"
 
-class WebHandler(BaseHTTPRequestHandler):
+class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         try:
             if self.path == "/":
@@ -25,6 +25,18 @@ class WebHandler(BaseHTTPRequestHandler):
         except IOError as e:
             self.send_error(404)
 
-async def start_server():
-    webserver = HTTPServer((hostname, port), WebHandler)
+class TimeoutHTTPServer(HTTPServer):
+    def get_request(self):
+        self.socket.settimeout(10.0)
+        result = None
+        while result is None:
+            try:
+                result = self.socket.accept()
+            except socket.timeout:
+                pass
+        result[0].settimeout(None)
+        return result
+
+def start_server():
+    webserver = TimeoutHTTPServer((hostname, port), Handler)
     webserver.serve_forever()
