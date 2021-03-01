@@ -9,7 +9,7 @@ from discord.ext import commands
 
 from config import Config
 from api import Api
-import webserver
+from webserver import WebServer
 
 import time
 
@@ -52,11 +52,9 @@ class BotCommands(commands.Cog):
         return
 
 if __name__ == "__main__":
-    threading.Thread(target=webserver.start_server).start()
+    webserver = WebServer()
     ttsBot = TtsBot(command_prefix=commands.when_mentioned_or('!'),
                     description='An obnoxious and unavoidable TTS bot')
     ttsBot.add_cog(BotCommands(ttsBot))
     ttsBot.run(config.token)
-    time.sleep(10)
-    api = Api()
     print('##### Application startup complete #####')
