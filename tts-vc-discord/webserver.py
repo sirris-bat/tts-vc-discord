@@ -1,7 +1,7 @@
 from aiohttp import web
 import os
 
-webdir = "../web"
+webdir = "web"
 
 class WebServer(web.Application):
     def __init__(self):
@@ -11,7 +11,7 @@ class WebServer(web.Application):
                          web.get('/style.css', self._http_handler_css),
                          web.get('/connect/{channelid}', self._ws_handler_connect)])
 
-    def run_server(self):
+    def run(self):
         return web.run_app(self)
 
     async def _http_handler_index(self, request):

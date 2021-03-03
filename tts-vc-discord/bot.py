@@ -7,9 +7,8 @@ import threading
 
 from discord.ext import commands
 
-from config import Config
-from api import Api
-from webserver import WebServer
+from .config import Config
+from .webserver import WebServer
 
 import time
 
