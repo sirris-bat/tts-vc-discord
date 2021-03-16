@@ -3,14 +3,10 @@ import discord
 import logging
 
 import asyncio
-import threading
 
 from discord.ext import commands
 
 from .config import Config
-from .webserver import WebServer
-
-import time
 
 config = Config()
 
@@ -27,33 +23,28 @@ class TtsBot(commands.Bot):
     _voiceClient = None
 
     async def connect_to_vc(self, channelId):
+        print(channelId)
+        print(type(channelId))
         self._voiceClient = await self.get_channel(channelId).connect()
 
     async def on_ready(self):
+        print('heck')
         logging.info('Logged in as {0.user}'.format(self))
 
 class BotCommands(commands.Cog):
-    def __init__(self, ttsBot):
-        self.ttsBot = ttsBot
+    def __init__(self, ttsbot):
+        self.ttsbot = ttsbot
 
     @commands.command()
     async def join(self, ctx):
         if ctx.message.author.voice.channel is not None:
-            await ttsBot.connect_to_vc(ctx.message.author.voice.channel.id)
+            await self.ttsbot.connect_to_vc(ctx.message.author.voice.channel.id)
 
     @commands.command()
     async def leave(self, ctx):
-        await ttsBot.disconnect()
+        await self.ttsbot.disconnect()
 
     @commands.command()
     async def say(self, ctx):
         # Call Bot's tts function
         return
-
-if __name__ == "__main__":
-    webserver = WebServer()
-    ttsBot = TtsBot(command_prefix=commands.when_mentioned_or('!'),
-                    description='An obnoxious and unavoidable TTS bot')
-    ttsBot.add_cog(BotCommands(ttsBot))
-    ttsBot.run(config.token)
-    print('##### Application startup complete #####')
