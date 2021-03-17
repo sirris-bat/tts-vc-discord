@@ -4,7 +4,9 @@ import logging
 
 import asyncio
 
+from io import BytesIO
 from discord.ext import commands
+from gtts import gTTS
 
 from .config import Config
 
@@ -20,15 +22,22 @@ if config.logFile is not None:
     logger.addHandler(handler)
 
 class TtsBot(commands.Bot):
-    _voiceClient = None
-
     async def connect_to_vc(self, channelId):
-        print(channelId)
-        print(type(channelId))
-        self._voiceClient = await self.get_channel(channelId).connect()
+        # Ensure only one voice client is active
+        if self.voice_clients is not None:
+            for client in self.voice_clients:
+                await client.disconnect()
+        # Connect with new voice client
+        await self.get_channel(channelId).connect()
+        self.voice_clients[0].stop()
+
+    async def say(self, phrase):
+        mp3fp = BytesIO()
+        tts = gTTS(phrase)
+        tts.save('x.mp3')
+        self.voice_clients[0].play(discord.FFmpegPCMAudio(source='x.mp3'))
 
     async def on_ready(self):
-        print('heck')
         logging.info('Logged in as {0.user}'.format(self))
 
 class BotCommands(commands.Cog):
@@ -45,6 +54,6 @@ class BotCommands(commands.Cog):
         await self.ttsbot.disconnect()
 
     @commands.command()
-    async def say(self, ctx):
+    async def say(self, ctx, *, phrase):
         # Call Bot's tts function
-        return
+        await self.ttsbot.say(phrase)
