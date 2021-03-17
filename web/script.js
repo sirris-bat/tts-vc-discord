@@ -1,30 +1,22 @@
-function WebSocketConnect(url) {
-    // Connect to websocket
+function WebSocketConnect(url, message = null) {
     var websocket_connect = new WebSocket(url);
     
     websocket_connect.onopen = function(e) {
-        alert('[open] Connection established');
-        alert(`Sending to ${url}`);
-        websocket_connect.send();
+        console.log(`Sending to ${url}`);
+        websocket_connect.send(message);
     };
 
     websocket_connect.onmessage = function(event) {
-        alert('[message] Data received from server: ${event.data}');
+        console.log('[message] Data received from server: ${event.data}');
     };
 
     websocket_connect.onclose = function(event) {
         if (event.wasClean) {
-            alert(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
-        } else {
-            // e.g. server process killed or network down
-            // event.code is usually 1006 in this case
-            alert('[close] Connection died');
-        }
+            console.log(`[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`);
+        } else { console.log('[close] Connection died'); }
     };
 
-    websocket_connect.onerror = function(error) {
-        alert(`[error] ${error.message}`)
-    };
+    websocket_connect.onerror = function(error) { console.log(`[error] ${error.message}`) };
 }
 
 window.addEventListener("load", function(){
@@ -37,7 +29,9 @@ window.addEventListener("load", function(){
 
     // Logic for say websocket
     function sendSay() {
-        alert("Not yet implemented")
+        const phrase = (new FormData(say_form)).get("phrase");
+        const websocket = `ws://${window.location.host}/say`;
+        WebSocketConnect(websocket, phrase);
     }
 
 

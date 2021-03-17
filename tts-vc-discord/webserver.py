@@ -14,7 +14,8 @@ class WebServer(commands.Cog):
         app.add_routes([web.get('/', self._http_handler_index),
                          web.get('/script.js', self._http_handler_js),
                          web.get('/style.css', self._http_handler_css),
-                         web.get('/connect/{channelid}', self._ws_handler_connect)])
+                         web.get('/connect/{channelid}', self._ws_handler_connect),
+                         web.get('/say', self._ws_handler_say)])
         runner = web.AppRunner(app)
         await runner.setup()
         self.site = web.TCPSite(runner, address, port)
@@ -41,6 +42,19 @@ class WebServer(commands.Cog):
         ws = web.WebSocketResponse()
         await ws.prepare(request)
         await ws.send_str(channelid)
+        await ws.close()
+
+        return ws
+
+    async def _ws_handler_say(self, request):
+        ws = web.WebSocketResponse()
+        await ws.prepare(request)
+
+        async for msg in ws:
+            phrase = msg.data
+            await self.ttsbot.say(phrase)
+            await ws.send_str(phrase)
+
         await ws.close()
 
         return ws
