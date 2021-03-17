@@ -34,7 +34,6 @@ window.addEventListener("load", function(){
         WebSocketConnect(websocket, phrase);
     }
 
-
     // Setup event listener for connect websocket
     const connect_form = document.getElementById("connectForm");
     connect_form.addEventListener("submit", function(event) {
@@ -48,4 +47,15 @@ window.addEventListener("load", function(){
         event.preventDefault();
         sendSay();
     });
+
+    // Update h1 to match deployed app name
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200){
+            let response = JSON.parse(xhr.responseText);
+            document.getElementById("appname").innerHTML = response.appname;
+        }  
+    }
+    xhr.open('GET', `http://${window.location.host}/appname`, true);
+    xhr.send();
 });

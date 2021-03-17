@@ -3,6 +3,7 @@ import confuse
 class _DefaultConfig:
     configName = 'TtsBot'
 
+    appName = 'TTS VC Discord'
     token = None
 
     logLevel = "INFO"
@@ -16,5 +17,6 @@ class Config(_DefaultConfig):
 
         self.token = config['Bot']['Token'].get(str)
 
+        self.appName = config['WebUI']['name'].get(str)
         self.logLevel = config['Logging']['logLevel'].get(str)
         self.logFile = config['Logging']['logFile'].get(str)

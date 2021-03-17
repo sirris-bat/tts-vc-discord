@@ -2,11 +2,14 @@ from aiohttp import web
 from discord.ext import commands
 import os
 
+from .config import Config
+
 webdir = "web"
 
 
 class WebServer(commands.Cog):
     def __init__(self, ttsbot):
+        self.config = Config()
         self.ttsbot = ttsbot
 
     async def serve(self, address='localhost', port=8080):
@@ -14,6 +17,7 @@ class WebServer(commands.Cog):
         app.add_routes([web.get('/', self._http_handler_index),
                          web.get('/script.js', self._http_handler_js),
                          web.get('/style.css', self._http_handler_css),
+                         web.get('/appname', self. _http_handler_appname),
                          web.get('/connect/{channelid}', self._ws_handler_connect),
                          web.get('/say', self._ws_handler_say)])
         runner = web.AppRunner(app)
@@ -33,6 +37,10 @@ class WebServer(commands.Cog):
 
     async def _http_handler_css(self, request):
         return web.FileResponse(os.path.join(os.getcwd(), webdir, 'style.css'))
+
+    async def _http_handler_appname(self, request):
+        data = {'appname': self.config.appName}
+        return web.json_response(data)
 
     async def _ws_handler_connect(self, request):
         channelid = request.match_info.get('channelid')
