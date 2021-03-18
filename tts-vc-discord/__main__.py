@@ -26,7 +26,8 @@ def main():
     ttsbot = TtsBot(command_prefix=commands.when_mentioned_or('!'),
                     description='An obnoxious and unavoidable TTS bot')
     web = WebServer(ttsbot)
-    ttsbot.add_cog(BotCommands(ttsbot))
+    if config.commandsEnabled:
+        ttsbot.add_cog(BotCommands(ttsbot))
     ttsbot.add_cog(web)
     ttsbot.loop.create_task(web.serve())
     ttsbot.run(config.token)
