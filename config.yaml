@@ -1,10 +1,8 @@
 appName: TtsBot
 
-WebUI:
-  enabled: true
-  name: TTS Bot
-
 Logging:
     logLevel: INFO
     logFile: discord.log
 
+Bot:
+    Token:
