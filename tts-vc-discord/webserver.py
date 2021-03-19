@@ -22,7 +22,7 @@ class WebServer(commands.Cog):
                          web.get('/say', self._ws_handler_say)])
         runner = web.AppRunner(app)
         await runner.setup()
-        self.site = web.TCPSite(runner, address, port)
+        self.site = web.TCPSite(runner)
         await self.ttsbot.wait_until_ready()
         await self.site.start()
 
