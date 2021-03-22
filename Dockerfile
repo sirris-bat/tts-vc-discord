@@ -1,4 +1,8 @@
-FROM python:3.9
+FROM python:3.9.2
+
+RUN apt-get -y update
+RUN apt-get -y upgrade
+RUN apt-get install -y ffmpeg
 
 RUN pip install pipenv
 
