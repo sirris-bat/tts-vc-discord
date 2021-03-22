@@ -8,6 +8,7 @@ aiohttp = "*"
 confuse = "*"
 "discord.py" = "*"
 gtts = "*"
+pynacl = "*"
 
 [dev-packages]
 
