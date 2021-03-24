@@ -23,14 +23,14 @@ window.addEventListener("load", function(){
     // Logic for connect websocket
     function sendConnect() {
         const channel_id = (new FormData(connect_form)).get("channelId");
-        const websocket = `ws://${window.location.host}/connect/${channel_id}`;
+        const websocket = `ws://${window.location.host}/ws/connect/${channel_id}`;
         WebSocketConnect(websocket);
     }
 
     // Logic for say websocket
     function sendSay() {
         const phrase = (new FormData(say_form)).get("phrase");
-        const websocket = `ws://${window.location.host}/say`;
+        const websocket = `ws://${window.location.host}/ws/say`;
         WebSocketConnect(websocket, phrase);
     }
 

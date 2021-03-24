@@ -18,8 +18,8 @@ class WebServer(commands.Cog):
                          web.get('/script.js', self._http_handler_js),
                          web.get('/style.css', self._http_handler_css),
                          web.get('/appname', self. _http_handler_appname),
-                         web.get('/connect/{channelid}', self._ws_handler_connect),
-                         web.get('/say', self._ws_handler_say)])
+                         web.get('/ws/connect/{channelid}', self._ws_handler_connect),
+                         web.get('/ws/say', self._ws_handler_say)])
         runner = web.AppRunner(app)
         await runner.setup()
         self.site = web.TCPSite(runner)
