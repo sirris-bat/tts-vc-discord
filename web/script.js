@@ -20,17 +20,22 @@ function WebSocketConnect(url, message = null) {
 }
 
 window.addEventListener("load", function(){
+    var ws_protocol = 'ws:';
+    if (location.protocol == 'https:') {
+        ws_protocol = 'wss:';
+    }
+
     // Logic for connect websocket
     function sendConnect() {
         const channel_id = (new FormData(connect_form)).get("channelId");
-        const websocket = `ws://${window.location.host}/ws/connect/${channel_id}`;
+        const websocket = `${ws_protocol}//${window.location.host}/ws/connect/${channel_id}`;
         WebSocketConnect(websocket);
     }
 
     // Logic for say websocket
     function sendSay() {
         const phrase = (new FormData(say_form)).get("phrase");
-        const websocket = `ws://${window.location.host}/ws/say`;
+        const websocket = `${ws_protocol}//${window.location.host}/ws/say`;
         WebSocketConnect(websocket, phrase);
     }
 
@@ -56,6 +61,6 @@ window.addEventListener("load", function(){
             document.getElementById("appname").innerHTML = response.appname;
         }  
     }
-    xhr.open('GET', `http://${window.location.host}/appname`, true);
+    xhr.open('GET', `${location.protocol}//${window.location.host}/appname`, true);
     xhr.send();
 });
